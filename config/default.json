@@ -1,0 +1,4 @@
+{
+    "MongoUri": "mongodb+srv://Bratishques:812951476@cluster0-xpfff.mongodb.net/Casino?retryWrites=true&w=majority",
+    "jwtSecret": "Heynowyouareanallstar"
+  }
