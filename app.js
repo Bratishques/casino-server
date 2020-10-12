@@ -3,14 +3,14 @@ const app = express();
 var server = require("http").createServer(app);
 const connectDB = require("./connectdb");
 const Game = require("./Models/game");
-const defaultPlayer = require("./defaultPlayer");
-const deck = require("./deck");
-const shuff = require("./shuff");
-const checkOD = require("./checkOD");
-const countDealer = require("./countDealer");
-const processDealer = require("./processDealer");
-const allSpec = require("./allSpec");
-const pickAndCount = require("./pickAndCount");
+const defaultPlayer = require("./utils/defaultPlayer");
+const deck = require("./utils/deck");
+const shuff = require("./utils/shuff");
+const checkOD = require("./utils/checkOD");
+const countDealer = require("./utils/countDealer");
+const processDealer = require("./utils/processDealer");
+const allSpec = require("./utils/allSpec");
+const pickAndCount = require("./utils/pickAndCount");
 
 const sleep = (milliseconds) => {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -185,10 +185,10 @@ io.on("connection", (socket) => {
             cards: ["x", room.dealerCards[1]],
             score: processDealer(room.dealerCards),
           });
+          await sleep(500);
           for (let player of room.players) {
             if (!player.isSpectating) {
               let lastCard = await pickAndCount(player, room.deck);
-
               await room.save();
               let { name, ownScore, overDrafted, turn, isEnough } = player;
               io.in(data.id).emit("changePlayerCard", {
