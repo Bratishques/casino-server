@@ -5,7 +5,6 @@ const allSpec = (arr) => {
       player.isEnough = false
       player.turn = 0
       player.overDrafted = 0
-      player.ownScore = 0 
   }
   return arr
 }
