@@ -29,7 +29,9 @@ connectDB();
 const io = require("socket.io")(server);
 io.on("connection", (socket) => {
   console.log(`a user connected ${socket.id}`);
-  socket.on("createRoom", async () => {
+
+  
+  socket.on("createRoom", async (data, cb) => {
     const msg = { sender: "System", message: "Bomb has been planted" };
     const room = new Game();
     const id = room._id;
@@ -37,11 +39,11 @@ io.on("connection", (socket) => {
     room.deck = [...deck];
     room.stage = 0;
     await room.save();
-
     socket.emit("newMessage", {
       text: `Created a room ${id}`,
       id: `${id}`,
     });
+    cb({id: id})
   });
 
  
@@ -126,7 +128,7 @@ io.on("connection", (socket) => {
         await room.save();
         io.in(payload.id).emit("changeDealer", {
           cards: ["x"],
-          score: processDealer(room.dealerCards),
+          score: "x",
         });
         await sleep(500);
         room.dealerCards = [...room.dealerCards, room.deck.pop()];
@@ -134,7 +136,7 @@ io.on("connection", (socket) => {
         await room.save();
         io.in(payload.id).emit("changeDealer", {
           cards: ["x", room.dealerCards[1]],
-          score: processDealer(room.dealerCards),
+          score: processDealer([room.dealerCards[1],room.dealerCards[0]]),
         });
         await sleep(500);
         for (let player of room.players) {
